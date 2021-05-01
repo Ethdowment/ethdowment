@@ -1,0 +1,116 @@
+{
+  "contractName": "Endowment",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/jaredcosulich/workspace/solidity/ethdowment/contracts/Endowment.sol\":\"Endowment\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/jaredcosulich/workspace/solidity/ethdowment/contracts/Endowment.sol\":{\"keccak256\":\"0xfe860f23281961808bbd5543b920d35798b4081c9282f83162a6dfc6f5c463ca\",\"urls\":[\"bzz-raw://4a90d43df6a6499adef4412f1fced5f094427ce1810e0f0646d8c095f0201efb\",\"dweb:/ipfs/QmVXR8P35YRYh9ng7AZq45XpnRdCW62591EjamsDE5h3pc\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a72315820944119fa19ab2855420f175c915d94c34fd37b290cbcaf36679c740997ec5eea64736f6c63430005100032",
+  "deployedBytecode": "0x6080604052600080fdfea265627a7a72315820944119fa19ab2855420f175c915d94c34fd37b290cbcaf36679c740997ec5eea64736f6c63430005100032",
+  "sourceMap": "56:21:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;56:21:0;;;;;;;",
+  "deployedSourceMap": "56:21:0:-;;;;;",
+  "source": "//SPDX-License-Identifier: MIT\npragma solidity ^0.5.0;\n\ncontract Endowment {}\n",
+  "sourcePath": "/Users/jaredcosulich/workspace/solidity/ethdowment/contracts/Endowment.sol",
+  "ast": {
+    "absolutePath": "/Users/jaredcosulich/workspace/solidity/ethdowment/contracts/Endowment.sol",
+    "exportedSymbols": {
+      "Endowment": [
+        2
+      ]
+    },
+    "id": 3,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "31:23:0"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 2,
+        "linearizedBaseContracts": [
+          2
+        ],
+        "name": "Endowment",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 3,
+        "src": "56:21:0"
+      }
+    ],
+    "src": "31:47:0"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "/Users/jaredcosulich/workspace/solidity/ethdowment/contracts/Endowment.sol",
+      "exportedSymbols": {
+        "Endowment": [
+          2
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.5",
+            ".0"
+          ]
+        },
+        "id": 1,
+        "name": "PragmaDirective",
+        "src": "31:23:0"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            2
+          ],
+          "name": "Endowment",
+          "nodes": [
+            null
+          ],
+          "scope": 3
+        },
+        "id": 2,
+        "name": "ContractDefinition",
+        "src": "56:21:0"
+      }
+    ],
+    "id": 3,
+    "name": "SourceUnit",
+    "src": "31:47:0"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.0",
+  "updatedAt": "2021-05-01T13:43:45.471Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}
