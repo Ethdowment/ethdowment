@@ -10,28 +10,36 @@ contract("Endowment", (accounts) => {
     });
 
     describe("donating to the endowment", async () => {
-        const donationAmount = 5;
+        const donationAmount = web3.utils.toWei('5', 'ether');;
 
-        let donor, accountFunds, tx;
+        let donor, accountFunds, txInfo;
 
         before("first donation", async () => {
             donor = accounts[0];
             accountFunds = await web3.eth.getBalance(donor);
-            tx = await endowment.donate(donationAmount, { from: donor });
+            txInfo = await endowment.donate(donationAmount, { from: donor, value: donationAmount });
         });
 
         it("adds to the endowment total", async () => {
-            const funds = await endowment.funds;
-            assert.equal(donationAmount, funds, "The total should now be equal to the first donation amount");
+            const funds = await endowment.funds();
+            assert.equal(donationAmount, funds, "The total funds should now be equal to the first `donatedAmount`");
+        });
+
+        it("stores the donation", async () => {
+            const donation = (await endowment.donations())[0];
+            assert.equal(donationAmount, donation.amount, "The amount in the first donation should be the `donatedAmount`");
+            assert.equal(donor, donation.donor, "The donor should be recorded in the donation");
         });
 
         it("subtracts funds from the donor", async () => {
-            const remainingDonorFunds = await web3.eth.getBalance(donor);
-            assert.equal(remainingDonorFunds, accountFunds - donationAmount, "The account should be debited by `donationAmount`");
+            const remainingDonorBalance = await web3.eth.getBalance(donor);
+            const tx = await web3.eth.getTransaction(txInfo.tx);
+            const gasCost = tx.gasPrice * txInfo.receipt.gasUsed;
+            assert.equal(accountFunds - donationAmount - gasCost, remainingDonorBalance, "The account should be debited by `donationAmount`");
         });
 
         it("emits an event notifying the donation was made", async () => {
-          truffleAssert.eventEmitted(tx, 'Donation', (ev) => {
+          truffleAssert.eventEmitted(txInfo, 'Donation', (ev) => {
               return ev.amount === donationAmount;
           });
         });
