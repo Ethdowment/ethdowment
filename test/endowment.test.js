@@ -10,7 +10,7 @@ contract("Endowment", (accounts) => {
     });
 
     describe("donating to the endowment", async () => {
-        const donationAmount = web3.utils.toWei('5', 'ether');;
+        const donationAmount = web3.utils.toWei('5', 'ether');
 
         let donor, accountFunds, txInfo;
 
@@ -22,7 +22,8 @@ contract("Endowment", (accounts) => {
 
         it("adds to the endowment total", async () => {
             const funds = await endowment.funds();
-            assert.equal(donationAmount, funds, "The total funds should now be equal to the first `donatedAmount`");
+            assert(funds > 0, "There are now funds in the endowment.")
+            assert.equal(donationAmount, funds, "The total funds are equal to the first `donatedAmount`");
         });
 
         it("stores the donation", async () => {
@@ -39,8 +40,8 @@ contract("Endowment", (accounts) => {
         });
 
         it("emits an event notifying the donation was made", async () => {
-          truffleAssert.eventEmitted(txInfo, 'Donation', (ev) => {
-              return ev.amount === donationAmount;
+          truffleAssert.eventEmitted(txInfo, 'DonationEvent', (ev) => {
+              return ev._donor === donor && ev._amount.toString() === donationAmount;
           });
         });
 

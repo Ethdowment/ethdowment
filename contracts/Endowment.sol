@@ -8,17 +8,19 @@ contract Endowment {
         uint256 date;
     }
 
+    event DonationEvent(address indexed _donor, uint256 _amount);
+
     Donation[] private _donations;
 
     function donate(uint256 amount) external payable {
         require(msg.value == amount);
-        Donation memory donation =
-            Donation({
-                donor: msg.sender,
-                amount: amount,
-                date: block.timestamp
-            });
-        _donations.push(donation);
+
+        uint256 date = block.timestamp;
+        _donations.push(
+            Donation({donor: msg.sender, amount: amount, date: date})
+        );
+
+        emit DonationEvent(msg.sender, amount);
     }
 
     function funds() external view returns (uint256) {
