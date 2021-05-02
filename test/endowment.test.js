@@ -87,7 +87,7 @@ contract("Endowment", (accounts) => {
 
                 const tx = await web3.eth.getTransaction(txInfo.tx);
                 const gasCost = web3.utils.toBN(
-                  tx.gasPrice * txInfo.receipt.gasUsed
+                    tx.gasPrice * txInfo.receipt.gasUsed
                 );
 
                 const secondTx = await web3.eth.getTransaction(secondTxInfo.tx);
@@ -102,8 +102,7 @@ contract("Endowment", (accounts) => {
                     .sub(secondGasCost);
 
                 assert.equal(remainingFunds.toString(), remainingDonorBalance, 
-                    "The account should be debited by both donation amounts plus gas costs");
-              
+                    "The account should be debited by both donation amounts plus gas costs");              
             });
 
             it("provides the full amount the donor has donated", async () => {
@@ -119,14 +118,16 @@ contract("Endowment", (accounts) => {
                     web3.utils.toWei(otherDonationEth.toString(), 'ether')
                 );
         
-                let secondDonor;
+                let otherDonor, otherTxInfo, otherAccountFunds;
     
                 before(async () => {
-                    secondDonor = accounts[1];
-                    accountFunds = await web3.eth.getBalance(secondDonor);
-                    txInfo = await endowment.donate(
+                    otherDonor = accounts[1];
+                    otherAccountFunds = web3.utils.toBN(
+                      await web3.eth.getBalance(otherDonor)
+                    );
+                    otherTxInfo = await endowment.donate(
                         otherDonationWei, 
-                        { from: secondDonor, value: otherDonationWei }
+                        { from: otherDonor, value: otherDonationWei }
                     );
                 });
     
@@ -136,7 +137,23 @@ contract("Endowment", (accounts) => {
                     const totalEth = donationEth + secondDonationEth + otherDonationEth;
                     const totalWei = web3.utils.toWei(totalEth.toString(), 'ether');
                     assert.equal(totalWei, funds.toString(), 
-                        "The total funds are equal to both donations from each donor");
+                        "The total funds are equal to all donations");
+                });
+
+                it("should debit the second donor's account", async () => {
+                    const remainingDonorBalance = await web3.eth.getBalance(otherDonor);
+
+                    const tx = await web3.eth.getTransaction(otherTxInfo.tx);
+                    const gasCost = web3.utils.toBN(
+                        tx.gasPrice * otherTxInfo.receipt.gasUsed
+                    );
+        
+                    const remainingFunds = otherAccountFunds
+                        .sub(otherDonationWei)
+                        .sub(gasCost);
+    
+                    assert.equal(remainingFunds.toString(), remainingDonorBalance, 
+                        "The other donor should have the proper funds debited from their account"); 
                 });
             });
         });
