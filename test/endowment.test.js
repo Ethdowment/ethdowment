@@ -155,6 +155,12 @@ contract("Endowment", (accounts) => {
                     assert.equal(remainingFunds.toString(), remainingDonorBalance, 
                         "The other donor should have the proper funds debited from their account"); 
                 });
+
+                it("should provide the single donation for the donorTotal of the other donor", async () => {
+                    const donatedAmount = await endowment.donorTotal(otherDonor);
+                    assert.equal(otherDonationWei.toString(), donatedAmount.toString(), 
+                        "The donatedAmount for the other donor should not include the first donor.");  
+                });
             });
         });
     });
