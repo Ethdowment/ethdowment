@@ -16,8 +16,8 @@ contract("Endowment", (accounts) => {
         );
 
         let donor, accountFunds, txInfo;
-
-        before("first donation", async () => {
+  
+        before(async () => {
             donor = accounts[0];
             accountFunds = web3.utils.toBN(
               await web3.eth.getBalance(donor)
@@ -67,7 +67,7 @@ contract("Endowment", (accounts) => {
 
             let secondTxInfo;
 
-            before("second donation, same donor", async () => {
+            before(async () => {
                 secondTxInfo = await endowment.donate(
                     secondDonationWei, 
                     { from: donor, value: secondDonationWei }
@@ -79,7 +79,7 @@ contract("Endowment", (accounts) => {
 
                 const totalWei = web3.utils.toWei((donationEth + secondDonationEth).toString(), 'ether');
                 assert.equal(totalWei, funds, 
-                    "The total funds are equal to the first and second `donationWei`s");
+                    "The total funds are equal to both donations from the donor");
             });
 
             it("subtracts more funds from the donor", async () => {
@@ -107,23 +107,38 @@ contract("Endowment", (accounts) => {
             });
 
             it("provides the full amount the donor has donated", async () => {
-              const donatedAmount = await endowment.donorTotal(donor);
-              const total = donationWei.add(secondDonationWei);
-              assert.equal(total.toString(), donatedAmount.toString(), 
-                  "The donatedAmount for the donor should equal the combination of the two donations");
+                const donatedAmount = await endowment.donorTotal(donor);
+                const total = donationWei.add(secondDonationWei);
+                assert.equal(total.toString(), donatedAmount.toString(), 
+                    "The donatedAmount for the donor should equal the combination of the two donations");
             });
 
+            describe("with donations from different donors", async => {
+                const otherDonationEth = 12;
+                const otherDonationWei = web3.utils.toBN(
+                    web3.utils.toWei(otherDonationEth.toString(), 'ether')
+                );
+        
+                let secondDonor;
+    
+                before(async () => {
+                    secondDonor = accounts[1];
+                    accountFunds = await web3.eth.getBalance(secondDonor);
+                    txInfo = await endowment.donate(
+                        otherDonationWei, 
+                        { from: secondDonor, value: otherDonationWei }
+                    );
+                });
+    
+                it("should provide the total amount donated between the two donors", async () => {
+                    const funds = await endowment.funds();
+    
+                    const totalEth = donationEth + secondDonationEth + otherDonationEth;
+                    const totalWei = web3.utils.toWei(totalEth.toString(), 'ether');
+                    assert.equal(totalWei, funds.toString(), 
+                        "The total funds are equal to both donations from each donor");
+                });
+            });
         });
-
-        // describe("with donations from different donors", async => {
-        //   before("first donation, different donor", async () => {
-        //       donor = accounts[1];
-        //       accountFunds = await web3.eth.getBalance(donor);
-        //       txInfo = await endowment.donate(donationAmount, { from: donor, value: donationAmount });
-        //   });
-
-        // });
-
     });
-
 });
