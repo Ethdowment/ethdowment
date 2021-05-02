@@ -11,6 +11,7 @@ contract Endowment {
     event DonationEvent(address indexed _donor, uint256 _amount);
 
     Donation[] private _donations;
+    mapping(address => uint256[]) private _donorDonations;
 
     function donate(uint256 amount) external payable {
         require(msg.value == amount);
@@ -19,6 +20,7 @@ contract Endowment {
         _donations.push(
             Donation({donor: msg.sender, amount: amount, date: date})
         );
+        _donorDonations[msg.sender].push(_donations.length - 1);
 
         emit DonationEvent(msg.sender, amount);
     }
@@ -29,5 +31,13 @@ contract Endowment {
 
     function donations() public view returns (Donation[] memory) {
         return _donations;
+    }
+
+    function donorTotal(address donor) public view returns (uint256) {
+        uint256 total = 0;
+        for (uint256 i = 0; i < _donorDonations[donor].length; i++) {
+            total += _donations[_donorDonations[donor][i]].amount;
+        }
+        return total;
     }
 }

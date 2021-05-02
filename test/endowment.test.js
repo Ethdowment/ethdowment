@@ -107,7 +107,10 @@ contract("Endowment", (accounts) => {
             });
 
             it("provides the full amount the donor has donated", async () => {
-
+              const donatedAmount = await endowment.donorTotal(donor);
+              const total = donationWei.add(secondDonationWei);
+              assert.equal(total.toString(), donatedAmount.toString(), 
+                  "The donatedAmount for the donor should equal the combination of the two donations");
             });
 
         });
