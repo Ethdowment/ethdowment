@@ -11,20 +11,22 @@ contract("Endowment", (accounts) => {
 
     describe("donating to the endowment", async () => {
         const donationEth = 5;
+        const donorName = "Donor Name";
         const donationWei = web3.utils.toBN(
           web3.utils.toWei(donationEth.toString(), 'ether')
         );
 
-        let donor, accountFunds, txInfo;
+        let donorAddress, accountFunds, txInfo;
   
         before(async () => {
-            donor = accounts[0];
+            donorAddress = accounts[0];
             accountFunds = web3.utils.toBN(
-              await web3.eth.getBalance(donor)
+              await web3.eth.getBalance(donorAddress)
             );
             txInfo = await endowment.donate(
                 donationWei, 
-                { from: donor, value: donationWei }
+                donorName,
+                { from: donorAddress, value: donationWei }
             );
         });
 
@@ -35,16 +37,23 @@ contract("Endowment", (accounts) => {
                 "The total funds are equal to the first `donationWei`");
         });
 
+        it("associates the name provided with the wallet address", async () => {
+            const name = (await endowment.donorName(donorAddress));
+            assert.equal(name, donorName, 
+                "The donor's name should be associated with the wallet address");
+        });
+
+
         it("stores the donation", async () => {
             const donation = (await endowment.donations())[0];
             assert.equal(donationWei, donation.amount, 
                 "The amount in the first donation should be the `donationWei`");
-            assert.equal(donor, donation.donor, 
-                "The donor should be recorded in the donation");
+            assert.equal(donorAddress, donation.donorAddress, 
+                "The donorAddress should be recorded in the donation");
         });
 
-        it("subtracts funds from the donor", async () => {
-            const remainingDonorBalance = await web3.eth.getBalance(donor);
+        it("subtracts funds from the Address", async () => {
+            const remainingDonorBalance = await web3.eth.getBalance(donorAddress);
             const tx = await web3.eth.getTransaction(txInfo.tx);
             const gasCost = web3.utils.toBN(tx.gasPrice * txInfo.receipt.gasUsed);
             
@@ -55,7 +64,10 @@ contract("Endowment", (accounts) => {
 
         it("emits an event notifying the donation was made", async () => {
             truffleAssert.eventEmitted(txInfo, 'DonationEvent', (ev) => {
-                return ev._donor === donor && ev._amount.toString() === donationWei.toString();
+                console.log(ev._donorName, donorName, ev._donorName === donorName)
+                return ev._donorAddress === donorAddress
+                       && ev._amount.toString() === donationWei.toString()
+                       && ev._donorName === donorName;
             });
         });
 
@@ -70,7 +82,7 @@ contract("Endowment", (accounts) => {
             before(async () => {
                 secondTxInfo = await endowment.donate(
                     secondDonationWei, 
-                    { from: donor, value: secondDonationWei }
+                    { from: donorAddress, value: secondDonationWei }
                 );
             });
 
@@ -79,11 +91,11 @@ contract("Endowment", (accounts) => {
 
                 const totalWei = web3.utils.toWei((donationEth + secondDonationEth).toString(), 'ether');
                 assert.equal(totalWei, funds, 
-                    "The total funds are equal to both donations from the donor");
+                    "The total funds are equal to both donations from the donorAddress");
             });
 
-            it("subtracts more funds from the donor", async () => {
-                const remainingDonorBalance = await web3.eth.getBalance(donor);
+            it("subtracts more funds from the donorAddress", async () => {
+                const remainingdonorAddressBalance = await web3.eth.getBalance(donorAddress);
 
                 const tx = await web3.eth.getTransaction(txInfo.tx);
                 const gasCost = web3.utils.toBN(
@@ -101,37 +113,37 @@ contract("Endowment", (accounts) => {
                     .sub(secondDonationWei)
                     .sub(secondGasCost);
 
-                assert.equal(remainingFunds.toString(), remainingDonorBalance, 
+                assert.equal(remainingFunds.toString(), remainingdonorAddressBalance, 
                     "The account should be debited by both donation amounts plus gas costs");              
             });
 
-            it("provides the full amount the donor has donated", async () => {
-                const donatedAmount = await endowment.donorTotal(donor);
+            it("provides the full amount the donorAddress has donated", async () => {
+                const donatedAmount = await endowment.donorTotal(donorAddress);
                 const total = donationWei.add(secondDonationWei);
                 assert.equal(total.toString(), donatedAmount.toString(), 
-                    "The donatedAmount for the donor should equal the combination of the two donations");
+                    "The donatedAmount for the donorAddress should equal the combination of the two donations");
             });
 
-            describe("with donations from different donors", async => {
+            describe("with donations from different donorAddresss", async => {
                 const otherDonationEth = 12;
                 const otherDonationWei = web3.utils.toBN(
                     web3.utils.toWei(otherDonationEth.toString(), 'ether')
                 );
         
-                let otherDonor, otherTxInfo, otherAccountFunds;
+                let otherdonorAddress, otherTxInfo, otherAccountFunds;
     
                 before(async () => {
-                    otherDonor = accounts[1];
+                    otherdonorAddress = accounts[1];
                     otherAccountFunds = web3.utils.toBN(
-                      await web3.eth.getBalance(otherDonor)
+                      await web3.eth.getBalance(otherdonorAddress)
                     );
                     otherTxInfo = await endowment.donate(
                         otherDonationWei, 
-                        { from: otherDonor, value: otherDonationWei }
+                        { from: otherdonorAddress, value: otherDonationWei }
                     );
                 });
     
-                it("should provide the total amount donated between the two donors", async () => {
+                it("should provide the total amount donated between the two donorAddresss", async () => {
                     const funds = await endowment.funds();
     
                     const totalEth = donationEth + secondDonationEth + otherDonationEth;
@@ -140,8 +152,8 @@ contract("Endowment", (accounts) => {
                         "The total funds are equal to all donations");
                 });
 
-                it("should debit the second donor's account", async () => {
-                    const remainingDonorBalance = await web3.eth.getBalance(otherDonor);
+                it("should debit the second donorAddress's account", async () => {
+                    const remainingdonorAddressBalance = await web3.eth.getBalance(otherdonorAddress);
 
                     const tx = await web3.eth.getTransaction(otherTxInfo.tx);
                     const gasCost = web3.utils.toBN(
@@ -152,14 +164,14 @@ contract("Endowment", (accounts) => {
                         .sub(otherDonationWei)
                         .sub(gasCost);
     
-                    assert.equal(remainingFunds.toString(), remainingDonorBalance, 
-                        "The other donor should have the proper funds debited from their account"); 
+                    assert.equal(remainingFunds.toString(), remainingdonorAddressBalance, 
+                        "The other donorAddress should have the proper funds debited from their account"); 
                 });
 
-                it("should provide the single donation for the donorTotal of the other donor", async () => {
-                    const donatedAmount = await endowment.donorTotal(otherDonor);
+                it("should provide the single donation for the donorTotal of the other donorAddress", async () => {
+                    const donatedAmount = await endowment.donorTotal(otherdonorAddress);
                     assert.equal(otherDonationWei.toString(), donatedAmount.toString(), 
-                        "The donatedAmount for the other donor should not include the first donor.");  
+                        "The donatedAmount for the other donorAddress should not include the first donorAddress.");  
                 });
             });
         });
