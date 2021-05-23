@@ -1,0 +1,28 @@
+name: Ethdowment CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+
+      - name: Install Ganache
+        run: yarn install ganache-cli
+
+      - name: Run Ganache
+        run: ganache-cli -p 7545 -e 1000
+
+      - name: Run tests
+        run: truffle test
