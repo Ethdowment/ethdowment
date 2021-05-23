@@ -1,6 +1,32 @@
 {
+  "name": "ethdowment",
+  "version": "0.0.1",
+  "description": "The Ethdowment smart contract and static website.",
+  "main": "truffle-config.js",
+  "scripts": {
+    "prepare": "npx truffle compile",
+    "test": "bash ./scripts/run_tests.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ethdowment/ethdowment.git"
+  },
+  "author": "Jared Cosulich",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ethdowment/ethdowment/issues"
+  },
+  "homepage": "https://github.com/Ethdowment/ethdowment#readme",
+  "dependencies": {
+    "ganache-cli": "^6.9.1",
+    "truffle": "^5.1.27"
+  },
   "devDependencies": {
+    "@codechecks/client": "^0.1.10",
     "chai": "^4.3.4",
+    "coveralls": "^3.1.0",
+    "eth-gas-reporter": "^0.2.17",
+    "solidity-coverage": "^0.7.5",
     "truffle-assertions": "^0.9.2"
   }
 }
