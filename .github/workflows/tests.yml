@@ -1,4 +1,4 @@
-name: Ethdowment CI
+name: Ethdowment Tests
 
 on:
   workflow_dispatch:
