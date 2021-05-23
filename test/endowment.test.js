@@ -49,8 +49,10 @@ contract("Endowment", (accounts) => {
             assert.equal(donationWei, donation.amount, 
                 "The amount in the first donation should be the `donationWei`");
             assert.equal(donorAddress, donation.donorAddress, 
-                "The donorAddress should be recorded in the donation");
-        });
+                "The donor address should be recorded in the donation");
+            assert.equal(donorName, donation.donorName, 
+              "The donor name should be recorded in the donation");
+          });
 
         it("subtracts funds from the donor", async () => {
             const remainingDonorBalance = await web3.eth.getBalance(donorAddress);
