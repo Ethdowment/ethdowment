@@ -1,10 +1,11 @@
 # Ethdowment
 
-The following provides instructions for contributing to the Ethdowment.
+The following work-in-progress README provides initial instructions for contributing to the [Ethdowment](https://ethdowment.org/).
 
 ## Getting Started
 
-- Join the [Discord](https://www.espn.com)
+- Join the [Discord](https://discord.gg/c3D3Nk6PJr)
+- Read more about the [Ethdowment](https://ethdowment.org/) on the [Ethdowment Gitbook](https://ethdowment.gitbook.io/ethdowment/)
 - Clone this repository
 - Install the [Ganache CLI](https://github.com/trufflesuite/ganache-cli)
 
