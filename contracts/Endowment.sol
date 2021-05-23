@@ -10,8 +10,8 @@ contract Endowment {
     }
 
     event DonationEvent(
-        string indexed _donorName,
         address indexed _donorAddress,
+        string _donorName,
         uint256 _amount
     );
 
@@ -34,7 +34,7 @@ contract Endowment {
         _donorDonations[msg.sender].push(_donations.length - 1);
         _donorNames[msg.sender] = name;
 
-        emit DonationEvent(name, msg.sender, amount);
+        emit DonationEvent(msg.sender, name, amount);
     }
 
     function funds() external view returns (uint256) {
