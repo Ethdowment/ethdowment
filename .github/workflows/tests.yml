@@ -19,7 +19,7 @@ jobs:
           node-version: "12.x"
 
       - name: Install Ganache
-        run: yarn add ganache-cli
+        run: yarn global add ganache-cli
 
       - name: Run Ganache
         run: ganache-cli -p 7545 -e 1000
