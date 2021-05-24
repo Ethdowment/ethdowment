@@ -1,6 +1,6 @@
 {
   "name": "ethdowment",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The Ethdowment smart contract and static website.",
   "main": "truffle-config.js",
   "scripts": {
